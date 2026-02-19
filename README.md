@@ -38,13 +38,13 @@ python3 microgpt_mla.py \
 
 ## Example run results
 
-Command:
+Example 1 command:
 
 ```bash
 python3 microgpt_mla.py --steps 2 --print_every 1 --max_new_tokens 10
 ```
 
-Observed output:
+Example 1 output:
 
 ```text
 step    1 | loss 3.7038
@@ -52,4 +52,20 @@ step    2 | loss 3.7257
 
 --- sample ---
 multi latenthbwr..nx f
+```
+
+Example 2 command:
+
+```bash
+python3 microgpt_mla.py --steps 2 --print_every 1 --max_new_tokens 12 --prompt "gelu"
+```
+
+Example 2 output:
+
+```text
+step    1 | loss 3.7038
+step    2 | loss 3.7257
+
+--- sample ---
+gelueaqr  lr cbh
 ```
