@@ -35,6 +35,7 @@ python3 microgpt_mla.py \
 - The script is intentionally small and readable, optimized for understanding.
 - Training data is a tiny built-in corpus for quick local testing.
 - Increasing `--steps` helps sample quality, but runtime also increases.
+- Training fix applied: RMSNorm scales now initialize to `1.0` (not random), and training samples windows from the full joined corpus.
 
 ## Example run results
 
@@ -52,20 +53,18 @@ docs = [
 Example command (training + inference on this corpus):
 
 ```bash
-python3 microgpt_mla.py --steps 12 --print_every 2 --max_new_tokens 20 --temperature 0.6 --prompt "the "
+python3 microgpt_mla.py --steps 24 --print_every 6 --max_new_tokens 20 --temperature 0.3 --prompt "small models "
 ```
 
 Observed output:
 
 ```text
-step    1 | loss 3.7038
-step    2 | loss 3.7257
-step    4 | loss 3.3858
-step    6 | loss 3.3197
-step    8 | loss 3.0639
-step   10 | loss 3.0011
-step   12 | loss 3.0347
+step    1 | loss 3.6927
+step    6 | loss 3.6784
+step   12 | loss 3.1969
+step   18 | loss 2.8978
+step   24 | loss 3.0257
 
 --- sample ---
-the qtm  tnunwnir ibbg e
+small models  e eseo  b eeen eeee
 ```

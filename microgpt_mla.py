@@ -88,6 +88,10 @@ def init_vec(n, scale=1.0):
     return [Value(random.gauss(0.0, scale)) for _ in range(n)]
 
 
+def ones_vec(n):
+    return [Value(1.0) for _ in range(n)]
+
+
 def init_mat(r, c, scale):
     return [init_vec(c, scale) for _ in range(r)]
 
@@ -118,17 +122,17 @@ def init_model(cfg, vocab):
     sd = {
         "wte": [init_vec(d, s) for _ in range(vocab)],
         "wpe": [init_vec(d, s) for _ in range(cfg["block_size"])],
-        "ln_f": init_vec(d, 1.0),
+        "ln_f": ones_vec(d),
         "lm_head": init_mat(vocab, d, s),
     }
     for i in range(nl):
         p = f"layer{i}."
-        sd[p + "ln1"] = init_vec(d, 1.0)
+        sd[p + "ln1"] = ones_vec(d)
         sd[p + "wq"] = init_mat(nlat * dlat, d, s)
         sd[p + "wk"] = init_mat(nlat * dlat, d, s)
         sd[p + "wv"] = init_mat(nlat * dlat, d, s)
         sd[p + "wo"] = init_mat(d, nlat * dlat, s)
-        sd[p + "ln2"] = init_vec(d, 1.0)
+        sd[p + "ln2"] = ones_vec(d)
         sd[p + "fc1"] = init_mat(dff, d, s)
         sd[p + "fc2"] = init_mat(d, dff, s)
     return sd
@@ -207,21 +211,21 @@ def train_and_generate(cfg):
         "multi latent attention uses learned slots.",
         "gelu keeps gradients smoother than relu.",
     ]
-    chars = sorted(set("\n".join(docs) + cfg["prompt"]))
+    corpus = "\n".join(docs)
+    chars = sorted(set(corpus + cfg["prompt"]))
     stoi = {c: i for i, c in enumerate(chars)}
     itos = {i: c for c, i in stoi.items()}
+    corpus_ids = [stoi[c] for c in corpus]
 
     sd = init_model(cfg, len(chars))
     params = all_params(sd)
     m, v = [0.0] * len(params), [0.0] * len(params)
 
     for step in range(1, cfg["steps"] + 1):
-        toks = [stoi[c] for c in random.choice(docs)]
-        n = min(cfg["train_seq_len"], cfg["block_size"] - 1, len(toks) - 1)
+        n = min(cfg["train_seq_len"], cfg["block_size"] - 1, len(corpus_ids) - 1)
         if n <= 0: continue
-        if len(toks) > n + 1:
-            st = random.randint(0, len(toks) - n - 1)
-            toks = toks[st:st + n + 1]
+        st = random.randint(0, len(corpus_ids) - n - 1)
+        toks = corpus_ids[st:st + n + 1]
 
         cache = [{"k": [], "v": []} for _ in range(cfg["n_layer"])]
         losses = []
@@ -258,8 +262,8 @@ def train_and_generate(cfg):
 
 def main():
     ap = argparse.ArgumentParser(description="microGPT with multi-latent attention + gelu")
-    ap.add_argument("--steps", type=int, default=80)
-    ap.add_argument("--lr", type=float, default=8e-3)
+    ap.add_argument("--steps", type=int, default=120)
+    ap.add_argument("--lr", type=float, default=4e-3)
     ap.add_argument("--block_size", type=int, default=64)
     ap.add_argument("--train_seq_len", type=int, default=20)
     ap.add_argument("--d_model", type=int, default=24)
@@ -269,7 +273,7 @@ def main():
     ap.add_argument("--d_ff", type=int, default=48)
     ap.add_argument("--print_every", type=int, default=10)
     ap.add_argument("--max_new_tokens", type=int, default=60)
-    ap.add_argument("--temperature", type=float, default=0.9)
+    ap.add_argument("--temperature", type=float, default=0.6)
     ap.add_argument("--prompt", type=str, default="multi latent")
     cfg = vars(ap.parse_args())
     random.seed(42)
