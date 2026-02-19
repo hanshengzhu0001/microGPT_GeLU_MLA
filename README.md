@@ -52,7 +52,7 @@ docs = [
 Example command (training + inference on this corpus):
 
 ```bash
-python3 microgpt_mla.py --steps 8 --print_every 2 --max_new_tokens 20 --prompt "multi latent"
+python3 microgpt_mla.py --steps 12 --print_every 2 --max_new_tokens 20 --temperature 0.6 --prompt "the "
 ```
 
 Observed output:
@@ -63,7 +63,9 @@ step    2 | loss 3.7257
 step    4 | loss 3.3858
 step    6 | loss 3.3197
 step    8 | loss 3.0639
+step   10 | loss 3.0011
+step   12 | loss 3.0347
 
 --- sample ---
-multi latentmizqqsoxutn  xswqzqn
+the qtm  tnunwnir ibbg e
 ```
