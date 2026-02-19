@@ -35,3 +35,21 @@ python3 microgpt_mla.py \
 - The script is intentionally small and readable, optimized for understanding.
 - Training data is a tiny built-in corpus for quick local testing.
 - Increasing `--steps` helps sample quality, but runtime also increases.
+
+## Example run results
+
+Command:
+
+```bash
+python3 microgpt_mla.py --steps 2 --print_every 1 --max_new_tokens 10
+```
+
+Observed output:
+
+```text
+step    1 | loss 3.7038
+step    2 | loss 3.7257
+
+--- sample ---
+multi latenthbwr..nx f
+```
