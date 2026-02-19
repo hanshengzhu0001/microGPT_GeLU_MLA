@@ -38,34 +38,32 @@ python3 microgpt_mla.py \
 
 ## Example run results
 
-Example 1 command:
+Training corpus used by the script:
 
-```bash
-python3 microgpt_mla.py --steps 2 --print_every 1 --max_new_tokens 10
+```python
+docs = [
+    "the quick brown fox jumps over the lazy dog.",
+    "small models teach big ideas with simple code.",
+    "multi latent attention uses learned slots.",
+    "gelu keeps gradients smoother than relu.",
+]
 ```
 
-Example 1 output:
+Example command (training + inference on this corpus):
+
+```bash
+python3 microgpt_mla.py --steps 8 --print_every 2 --max_new_tokens 20 --prompt "multi latent"
+```
+
+Observed output:
 
 ```text
 step    1 | loss 3.7038
 step    2 | loss 3.7257
+step    4 | loss 3.3858
+step    6 | loss 3.3197
+step    8 | loss 3.0639
 
 --- sample ---
-multi latenthbwr..nx f
-```
-
-Example 2 command:
-
-```bash
-python3 microgpt_mla.py --steps 2 --print_every 1 --max_new_tokens 12 --prompt "gelu"
-```
-
-Example 2 output:
-
-```text
-step    1 | loss 3.7038
-step    2 | loss 3.7257
-
---- sample ---
-gelueaqr  lr cbh
+multi latentmizqqsoxutn  xswqzqn
 ```
